@@ -58,6 +58,10 @@ class Formula:
                         if m[0].isupper():
                             self.variables.append(m[0])
 
+
+            if self.term[:2] == "~[" and self.has_variables():
+                self.term = self.term + "]"
+
     def has_variables(self):
         return (len(self.variables) > 0)
 
