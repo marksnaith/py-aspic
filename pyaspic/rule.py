@@ -64,7 +64,3 @@ class Rule:
 
     def __hash__(self):
         return hash("".join([str(a) for a in self.antecedents]) + str(self.consequent) + str(self.type))
-
-
-if __name__ == "__main__":
-    Rule.from_string("[r1]","foo(X),too(Y)=>bar(X,Y)")
