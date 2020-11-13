@@ -218,11 +218,30 @@ class ArgumentationTheory:
                         if arg2_conclusion in contraries:
                             attacks.append((arg2.label, arg1.label))
                 elif arg1_conclusion[:2] == "~[":
-                    undercut_rule = arg1_conclusion[1:]
+
+                    if arg1.conclusion.has_variables():
+                        undercut_rule = arg1.conclusion.term[1:]
+                    else:
+                        undercut_rule = arg1_conclusion[1:]
+
                     for arg2 in self.arguments:
                         if arg2.top_rule:
                             if arg2.top_rule.type==Rule.DEFEASIBLE and arg2.top_rule.label == undercut_rule:
-                                attacks.append((arg1.label,arg2.label))
+                                if arg1.conclusion.has_parameters() and arg2.conclusion.has_parameters():
+                                    arg1_parameters = arg1.conclusion.parameters
+                                    arg2_parameters = arg2.conclusion.parameters
+
+                                    if len(arg1_parameters) == len(arg2_parameters):
+                                        proceed = True
+                                        for i in range(len(arg1_parameters)):
+                                            if arg1_parameters[i] != arg2_parameters[i]:
+                                                proceed = False
+                                                break
+
+                                        if proceed:
+                                            attacks.append((arg1.label,arg2.label))
+                                else:
+                                    attacks.append((arg1.label,arg2.label))
             if simple:
                 return attacks
             else:
